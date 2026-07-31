@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integer Machine</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Integer Machine</h1>
+
+        <div class="input-group">
+            <label for="decimal">Decimal Number</label>
+            <input
+                type="number"
+                id="decimal"
+                placeholder="Enter an integer">
+        </div>
+
+        <div class="input-group">
+            <label for="bits">Bit Size</label>
+            <input
+                type="number"
+                id="bits"
+                min="2"
+                placeholder="Example: 8">
+        </div>
+
+        <button id="convertBtn">
+            Convert
+        </button>
+
+        <hr>
+
+        <div class="output">
+            <h3>Unsigned Binary</h3>
+            <p id="unsignedOutput">-</p>
+
+            <h3>Signed Binary (Two's Complement)</h3>
+            <p id="signedOutput">-</p>
+        </div>
+
+    </div>
+
+    <script src="conversions.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
