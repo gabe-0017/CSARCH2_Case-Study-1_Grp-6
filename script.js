@@ -27,6 +27,61 @@ convertBtn.addEventListener("click", function () {
     }
 });
 
+const multiplicandInput = document.getElementById("multiplicand");
+const multiplierInput = document.getElementById("multiplier");
+const mulBitsInput = document.getElementById("mulBits");
+const mulSignedInput = document.getElementById("mulSigned");
+const multiplyBtn = document.getElementById("multiplyBtn");
+
+multiplyBtn.addEventListener("click", function () {
+    if (multiplicandInput.value === "" || multiplierInput.value === "" || mulBitsInput.value === "") {
+        alert("Please fill in all fields.");
+        return;
+    }
+
+    let multiplicand, multiplier;
+    try {
+        multiplicand = BigInt(multiplicandInput.value);
+        multiplier = BigInt(multiplierInput.value);
+    } catch {
+        alert("Multiplicand and multiplier must be integers.");
+        return;
+    }
+
+    const bits = Number(mulBitsInput.value);
+    if (!Number.isInteger(bits)) {
+        alert("Bit size must be an integer.");
+        return;
+    }
+    if (bits < 2) {
+        alert("Bit size must be at least 2.");
+        return;
+    }
+
+    const signed = mulSignedInput.checked;
+    const result = SequentialMultiplier(multiplicand, multiplier, bits, signed);
+
+    // Out-of-range case returns a plain string, not an object
+    if (typeof result === "string") {
+        alert(result);
+        return;
+    }
+
+    document.getElementById("mulResultOutput").textContent =
+        result.decimal + "  (Binary: " + result.result + ")";
+
+    const stepsContainer = document.getElementById("mulStepsOutput");
+    stepsContainer.innerHTML = "";
+    result.steps.forEach(function (step) {
+        const stepLine = document.createElement("p");
+        stepLine.textContent =
+            "Pass " + step.pass + " — A: " + step.A +
+            "  Q: " + step.Q + "  Q-1: " + step.Q_minus_1 +
+            "  M: " + step.M + "  [" + step.operation + "] " + step.explanation;
+        stepsContainer.appendChild(stepLine);
+    });
+});
+
 const dividendInput = document.getElementById("dividend");
 const divisorInput = document.getElementById("divisor");
 const divBitsInput = document.getElementById("divBits");

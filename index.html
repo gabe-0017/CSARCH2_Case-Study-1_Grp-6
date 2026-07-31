@@ -13,6 +13,8 @@
 
         <h1>Integer Machine</h1>
         
+        <!-- Convert decimal to binary -->
+
         <hr>
 
         <h2>Convert decimal to unsigned/signed binary</h2>
@@ -46,9 +48,49 @@
             <p id="signedOutput">-</p>
         </div>
 
+        <!-- Multiplication -->
+
         <hr>
         <h2>Perform multiplication</h2>
-        <!-- insert multiplication ui here -->
+        <div class="input-group">
+            <label for="multiplicand">Multiplicand (Decimal)</label>
+            <input
+                type="number"
+                id="multiplicand"
+                placeholder="Enter multiplicand">
+        </div>
+        <div class="input-group">
+            <label for="multiplier">Multiplier (Decimal)</label>
+            <input
+                type="number"
+                id="multiplier"
+                placeholder="Enter multiplier">
+        </div>
+        <div class="input-group">
+            <label for="mulBits">Bit Size</label>
+            <input
+                type="number"
+                id="mulBits"
+                min="2"
+                placeholder="Example: 8">
+        </div>
+        <div class="input-group">
+            <label for="mulSigned">Treat as Signed</label>
+            <input
+                type="checkbox"
+                id="mulSigned">
+        </div>
+        <button id="multiplyBtn">
+            Multiply
+        </button>
+        <div class="output">
+            <h3>Result</h3>
+            <p id="mulResultOutput">-</p>
+            <h3>Step-by-Step Trace</h3>
+            <div id="mulStepsOutput"></div>
+        </div>
+
+        <!-- Division -->
 
         <hr>
         <h2>Perform division</h2>
@@ -89,6 +131,7 @@
 
     <script src="conversions.js"></script>
     <script src="divisions.js"></script>
+    <script src="multiplications.js"></script>
     <script src="script.js"></script>
 
 </body>
