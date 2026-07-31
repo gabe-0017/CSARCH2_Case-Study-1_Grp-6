@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integer Machine</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Integer Machine</h1>
+        
+        <hr>
+
+        <h2>Convert decimal to unsigned/signed binary</h2>
+
+        <div class="input-group">
+            <label for="decimal">Decimal Number</label>
+            <input
+                type="number"
+                id="decimal"
+                placeholder="Enter an integer">
+        </div>
+
+        <div class="input-group">
+            <label for="bits">Bit Size</label>
+            <input
+                type="number"
+                id="bits"
+                min="2"
+                placeholder="Example: 8">
+        </div>
+
+        <button id="convertBtn">
+            Convert
+        </button>
+
+        <div class="output">
+            <h3>Unsigned Binary</h3>
+            <p id="unsignedOutput">-</p>
+
+            <h3>Signed Binary (Two's Complement)</h3>
+            <p id="signedOutput">-</p>
+        </div>
+
+        <hr>
+        <h2>Perform multiplication</h2>
+        <!-- insert multiplication ui here -->
+
+        <hr>
+        <h2>Perform division</h2>
+        <div class="input-group">
+            <label for="dividend">Dividend (Decimal)</label>
+            <input
+                type="number"
+                id="dividend"
+                placeholder="Enter dividend">
+        </div>
+        <div class="input-group">
+            <label for="divisor">Divisor (Decimal)</label>
+            <input
+                type="number"
+                id="divisor"
+                placeholder="Enter divisor">
+        </div>
+        <div class="input-group">
+            <label for="divBits">Bit Size</label>
+            <input
+                type="number"
+                id="divBits"
+                min="2"
+                placeholder="Example: 8">
+        </div>
+        <button id="divideBtn">
+            Divide
+        </button>
+        <div class="output">
+            <h3>Quotient</h3>
+            <p id="quotientOutput">-</p>
+            <h3>Remainder</h3>
+            <p id="remainderOutput">-</p>
+            <h3>Step-by-Step Trace</h3>
+            <div id="stepsOutput"></div>
+        </div>
+    </div>
+
+    <script src="conversions.js"></script>
+    <script src="divisions.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
