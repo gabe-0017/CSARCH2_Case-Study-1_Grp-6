@@ -76,7 +76,7 @@ multiplyBtn.addEventListener("click", function () {
         const stepLine = document.createElement("p");
         stepLine.textContent =
             "Pass " + step.pass + " — A: " + step.A +
-            "  Q: " + step.Q + "  Q-1: " + step.Q_minus_1 +
+            "  Q: " + step.Q +
             "  M: " + step.M + "  [" + step.operation + "] " + step.explanation;
         stepsContainer.appendChild(stepLine);
     });

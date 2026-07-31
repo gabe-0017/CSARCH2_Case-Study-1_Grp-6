@@ -1,7 +1,6 @@
 // Helper to convert to binary string with padding
 function toBinary(num, bits) {
     if (num < 0n) {
-        // Two's complement for negative numbers
         let mask = (1n << BigInt(bits)) - 1n;
         let value = (mask + num + 1n) & mask;
         return value.toString(2).padStart(bits, '0');
@@ -9,13 +8,12 @@ function toBinary(num, bits) {
     return num.toString(2).padStart(bits, '0');
 }
 
-
 function SequentialMultiplier(multiplicand, multiplier, bits, signed = false) {
-    // Big int converter
     let M = BigInt(multiplicand);
     let Q = BigInt(multiplier);
     const n = bits;
 
+    // Range checks
     if (signed) {
         const min = -(1n << BigInt(n - 1));
         const max = (1n << BigInt(n - 1)) - 1n;
@@ -29,116 +27,67 @@ function SequentialMultiplier(multiplicand, multiplier, bits, signed = false) {
         }
     }
 
-    // For signed use two's comp rep
-    let M_bits, Q_bits;
+    let resultSign = 1n;
+    let M_mag, Q_mag;
     if (signed) {
-        // Get two's comp rep
-        if (M < 0n) {
-            M_bits = (1n << BigInt(n)) + M;
-        } else {
-            M_bits = M;
-        }
-        if (Q < 0n) {
-            Q_bits = (1n << BigInt(n)) + Q;
-        } else {
-            Q_bits = Q;
-        }
+        if (M < 0n) { resultSign = -resultSign; M_mag = -M; } else { M_mag = M; }
+        if (Q < 0n) { resultSign = -resultSign; Q_mag = -Q; } else { Q_mag = Q; }
     } else {
-        M_bits = M;
-        Q_bits = Q;
-    } 
+        M_mag = M;
+        Q_mag = Q;
+    }
 
-    // Init registers
+    const maskN = (1n << BigInt(n)) - 1n;
+    const maskA = (1n << BigInt(n + 1)) - 1n; // A gets an extra guard bit to safely hold carry
+
     let A = 0n;
-    let Q_minus_1 = 0n;
-    // Store steps for output
-    let steps = [];
-    const mask = (1n << BigInt(n)) - 1n;
+    let Qreg = Q_mag & maskN;
+    const steps = [];
 
-    // Init state
     steps.push({
         pass: 0,
         A: '0'.repeat(n),
-        Q: toBinary(Q_bits, n),
-        Q_minus_1: '0',
-        M: toBinary(M_bits, n),
+        Q: toBinary(Qreg, n),
+        M: toBinary(M_mag, n),
         operation: 'Initialization',
-        explanation: 'A <- 0, Q^-1 <- 0'
+        explanation: 'A <- 0'
     });
 
-    // Do mult for each bit
     for (let i = 1; i <= n; i++) {
-        // Check Q0 and Q_minus1
-        let Q0 = Q_bits & 1n;
-        let q0_qminus1 = (Q0 << 1n) | Q_minus_1;
-        let operation = 'No operation';
-        let explanation = '';
+        const Q0 = Qreg & 1n;
+        let operation, explanation;
 
-        if (!signed) {
-            // Unsigned
-            if (Q0 === 1n) {
-                A = (A + M_bits) & mask;
-                operation = 'A <- A + M';
-                explanation = 'Q0 = 1, add M to A';
-            } else {
-                explanation = 'Q0 = 0, no addition';
-            }
+        if (Q0 === 1n) {
+            A = (A + M_mag) & maskA;
+            operation = 'A <- A + M';
+            explanation = 'Q0 = 1, add M to A';
         } else {
-            // Signed Booth's
-            let q0_qminus1 = (Q0 << 1n) | Q_minus_1;
-            if (q0_qminus1 === 1n) { // 01
-                A = (A + M_bits) & mask;
-                operation = 'A <- A + M';
-                explanation = 'Q0Q^-1 = 01, add M to A';
-            } else if (q0_qminus1 === 2n) { // 10
-                A = (A - M_bits) & mask;
-                operation = 'A <- A - M';
-                explanation = 'Q0Q^-1 = 10, subtract M from A';
-            } else {
-                explanation = `Q0Q^-1 = ${q0_qminus1}, no action`;
-            }
+            operation = 'No operation';
+            explanation = 'Q0 = 0, no addition';
         }
 
-        let combined = (A << BigInt(n + 1)) | (Q_bits << 1n) | Q_minus_1; // Combine
-        let signBit = (A & (1n << BigInt(n - 1))) !== 0n ? 1n : 0n; // shift right to preserve sign bit
-        combined = combined >> 1n; // Shift right by 1
-        
-        if (signed && signBit === 1n) {
-            combined = combined | (1n << BigInt(n * 2));
-        }
-        
-        // Extract shifted values
-        A = (combined >> BigInt(n + 1)) & mask;
-        Q_bits = (combined >> 1n) & mask;
-        Q_minus_1 = combined & 1n;
+        // Shift A:Q right by 1
+        const carryOut = A & 1n;
+        A = A >> 1n;
+        Qreg = ((Qreg >> 1n) | (carryOut << BigInt(n - 1))) & maskN;
 
-        // Store step
         steps.push({
             pass: i,
-            A: toBinary(A, n),
-            Q: toBinary(Q_bits, n),
-            Q_minus_1: Q_minus_1.toString(),
-            M: toBinary(M_bits, n),
+            A: toBinary(A & maskN, n),
+            Q: toBinary(Qreg, n),
+            M: toBinary(M_mag, n),
             operation: operation,
             explanation: explanation
         });
     }
 
-    // Final: A cat with Q
-    let result = (A << BigInt(n)) | Q_bits;
-    let result_bin = toBinary(result, n * 2);
-    
-    // Convert to decimal (handle signed if needed)
-    let result_dec;
-    if (signed && (result & (1n << BigInt(n * 2 - 1))) !== 0n) {
-        result_dec = result - (1n << BigInt(n * 2));
-    } else {
-        result_dec = result;
-    }
+    const productMag = (A << BigInt(n)) | Qreg;
+    const productSigned = signed ? resultSign * productMag : productMag;
+    const result_bin = toBinary(productSigned, n * 2);
 
     return {
         steps: steps,
         result: result_bin,
-        decimal: result_dec.toString()
+        decimal: productSigned.toString()
     };
 }
