@@ -90,3 +90,15 @@ button:hover{
     font-weight: bold;
     font-style: normal;
 }
+
+.section{
+    background:#3F4145;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+    border:1px solid #55575A;
+}
+
+.section:last-child{
+    margin-bottom:0;
+}
