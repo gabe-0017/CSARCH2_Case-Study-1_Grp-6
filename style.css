@@ -1,24 +1,49 @@
 body{
     font-family: Arial, Helvetica, sans-serif;
-    background:#f2f2f2;
+    background:#323437;
 }
 
 .container{
     width:500px;
     margin:40px auto;
-    background:white;
+    background:#818380;
     padding:25px;
     border-radius:10px;
     box-shadow:0 0 10px rgba(0,0,0,.15);
 }
 
+.container h1{
+    text-align:center;
+    color: white;
+    font-family: "Fira Code", monospace;
+    font-optical-sizing: auto;
+    font-weight: bold;
+    font-style: normal;
+}
+
+.container h2{
+    color: #FCFCFC;
+    font-family: "Fira Code", monospace;
+    font-size: 1.3em;
+    text-align: center;
+}
+
+.container h5{
+    text-align: center;
+    color: white;
+    font-family: "Fira Code", monospace;
+}
+
 .input-group{
-    margin-bottom:20px;
+    margin-bottom:10px;
 }
 
 label{
     display:block;
     margin-bottom:5px;
+    color: white;
+    font-family: "Fira Code", monospace;
+    font-weight: 500;
 }
 
 input{
@@ -26,13 +51,28 @@ input{
     padding:10px;
     font-size:16px;
     box-sizing:border-box;
+    border-radius: 10px;
+    background-color: #D9DDDC;
+    opacity: 0.8;
 }
 
 button{
     width:100%;
     padding:12px;
     font-size:16px;
+    font-family: "Fira Code", monospace;
+    font-optical-sizing: auto;
     cursor:pointer;
+    background-color: #FFF700;
+    border-radius: 15px;
+    border-color: white;
+}
+
+button:hover{
+    background-color: white;
+    color: black;
+    font-weight: bold;
+    border-color: black;
 }
 
 .output p{
@@ -40,4 +80,13 @@ button{
     padding:10px;
     border-radius:5px;
     font-family:monospace;
+}
+
+.output h3{
+    color: #D9DDDC;
+    font-weight: 500;
+    font-family: "Fira Code", monospace;
+    font-optical-sizing: auto;
+    font-weight: bold;
+    font-style: normal;
 }
