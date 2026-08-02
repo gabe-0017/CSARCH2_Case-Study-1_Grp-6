@@ -1,2 +1,2 @@
-[insert YouTube video link here]
-(make sure it is public)
+Video Walkthrough link:
+https://www.youtube.com/watch?v=p0KNzwyL2Fw
